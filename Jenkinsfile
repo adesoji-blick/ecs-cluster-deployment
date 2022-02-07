@@ -4,8 +4,7 @@ pipeline {
             AWS_ACCESS_KEY_ID     = credentials ('AWS_ACCESS_KEY_ID')
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
-            ECR_REPO = "319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend"
-            BUILD_NUMBER = '2'
+            BUILD_NUMBER = '1'
         } 
     stages {
         stage('Build & Tag Docker Image for SolarBase-backend') {
@@ -22,13 +21,14 @@ pipeline {
                 // Retrieve authentication token and authenticate Docker client to ECR.
                 sh "echo Retrieve authentication token and authenticate Docker client to ECR."
                 sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend"
+                // Push SolarBase Backend Docker Image to ECR
                 sh "echo Pushing SolarBase Backend Docker Image to ECR"
                 sh "sudo docker push 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend:0.0.${BUILD_NUMBER}"
                 }   
            }
         }
 
-        // stage('Manage Develop Branch for Test App') {
+        // stage('Deploy Image to ECS cluster') {
         //     when {
         //         branch "develop"
         //     }
