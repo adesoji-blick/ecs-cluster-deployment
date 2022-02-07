@@ -4,6 +4,7 @@ pipeline {
             AWS_ACCESS_KEY_ID     = credentials ('AWS_ACCESS_KEY_ID')
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
+            ECR_REPO = "319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend"
             BUILD_NUMBER = '1'
         } 
     stages {
