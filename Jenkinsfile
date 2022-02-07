@@ -12,6 +12,7 @@ pipeline {
                 // Building Docker Image for SolarBase Backend
                 sh "sudo docker build -t solarbase-backend:latest ."   
                 // Tag Docker Image for Solarbase Backend
+                sh "echo tagging Docker image for SolarBase Backend"
                 sh "sudo docker tag solarbase-backend:latest 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend:0.0.${BUILD_NUMBER}"     
             }
         }
