@@ -21,7 +21,7 @@ pipeline {
             steps {
                 // Retrieve authentication token and authenticate Docker client to ECR.
                 sh "echo Retrieve authentication token"
-                sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION}"
+                sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} --debug"
                 sh "echo authenticate Docker client to ECR."
                 sh "sudo docker login --username AWS --password-stdin 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend"
                 // Push SolarBase Backend Docker Image to ECR
