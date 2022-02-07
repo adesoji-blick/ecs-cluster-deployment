@@ -19,9 +19,6 @@ pipeline {
         stage('Push SolarBase Docker Image to ECR') {
             steps {
                 // Retrieve authentication token and authenticate Docker client to ECR.
-                sh "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
-                sh "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
-                sh "export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}"
                 sh "echo Retrieve authentication token"
                 sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION}"
                 sh "echo authenticate Docker client to ECR."
