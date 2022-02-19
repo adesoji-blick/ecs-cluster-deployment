@@ -7,23 +7,23 @@ pipeline {
             BUILD_NUMBER = '1'
         } 
     stages {
-        stage('Build & Tag Docker Image for SolarBase-backend') {
+        stage('Build & Tag Docker Image for Directions App') {
             steps {
-                // Building Docker Image for SolarBase Backend
-                sh "sudo docker build -t solarbase-backend:latest ."   
-                // Tag Docker Image for Solarbase Backend
-                sh "echo tagging Docker image for SolarBase Backend"
-                sh "sudo docker tag solarbase-backend:latest 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend:0.0.${BUILD_NUMBER}"     
+                // Building Docker Image for Directions App
+                sh "sudo docker build -t direction-app:latest ."   
+                // Tag Docker Image for Directions App
+                sh "echo tagging Docker image for direction-app"
+                sh "sudo docker tag direction-app:latest 319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}"     
             }
         }
-        stage('Push SolarBase Docker Image to ECR') {
+        stage('Push directions App Docker Image to ECR') {
             steps {
                 // Retrieve authentication token and authenticate Docker client to ECR.
                 sh "echo Retrieve authentication token and authenticate Docker client to ECR."
-                sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend"
-                // Push SolarBase Backend Docker Image to ECR
-                sh "echo Pushing SolarBase Backend Docker Image to ECR"
-                sh "sudo docker push 319670758662.dkr.ecr.ca-central-1.amazonaws.com/solarbase-backend:0.0.${BUILD_NUMBER}"
+                sh "/usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin 319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app"
+                // Push Directions App Docker Image to ECR
+                sh "echo Pushing direction-app Docker Image to ECR"
+                sh "sudo docker push 319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}"
                 }   
            }
         }
