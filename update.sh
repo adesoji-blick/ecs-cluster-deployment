@@ -9,7 +9,7 @@ CLUSTER=direction-app-cluster
 # NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
 # SERVICE_NAME=${NAME}-service
 FAMILY=direction-task-definition
-NAME=direction-app-container
+NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
 env
 aws configure list
