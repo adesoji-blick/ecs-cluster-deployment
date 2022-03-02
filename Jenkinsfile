@@ -26,8 +26,6 @@ pipeline {
                 sh "sudo docker push 319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}"
                 }   
            }
-        }
-
         stage('Deploy Image to ECS cluster') {
             // when {
             //     branch "develop"
@@ -40,4 +38,4 @@ pipeline {
            }
         }
    }
-
+}
