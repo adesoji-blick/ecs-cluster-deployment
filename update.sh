@@ -5,9 +5,12 @@ PATH=$PATH:/usr/local/bin; export PATH
 REGION=ca-central-1
 REPOSITORY_NAME=direction-app
 CLUSTER=direction-app-cluster
-FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
-NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
-SERVICE_NAME=${NAME}-service
+# FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
+FAMILY=direction-task-definition
+# NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
+NAME=direction-app-container
+# SERVICE_NAME=${NAME}-service
+SERVICE_NAME=direction-app-service
 env
 aws configure list
 echo $HOME
