@@ -4,7 +4,7 @@ pipeline {
             AWS_ACCESS_KEY_ID     = credentials ('AWS_ACCESS_KEY_ID')
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
-            BUILD_NUMBER = '101'
+            BUILD_NUMBER = '102'
         } 
     stages {
         stage('Build & Tag Docker Image for Directions App') {
@@ -28,24 +28,16 @@ pipeline {
            }
         }
 
-        // stage('Deploy Image to ECS cluster') {
-        //     when {
-        //         branch "develop"
-        //     }
-        //     steps {
-        //         // tag docker image for dev app and push to docker.io
-        //         sh "sudo docker tag direction-app:latest blickng/direction-app-dev:latest"
-        //         withCredentials([string(credentialsId: 'DockerUserID', variable: 'dockerusername'), string(credentialsId: 'DockerPassword', variable: 'dockerpassword')]) {
-        //         sh "sudo docker login -u blickng -p $dockerpassword"
-        //         sh "sudo docker push blickng/direction-app-dev:latest"
-        //         sh "sudo docker logout"
-        //         }   
-        //         // ssh into dev machine Pull docker image and run container instance in remote machine
-        //         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-key', keyFileVariable: '')]) {
-        //         // sh "ssh ec2-user@52.60.57.220 sudo docker rm -f direction-app-dev"     
-        //         sh "ssh -o StrictHostKeyChecking=no ec2-user@52.60.57.220 sudo docker run -d -p 8080:8080 -e loginname=myname -e loginpass=mypass -e api_key=xxxxxxxx --name direction-app-dev blickng/direction-app-dev:latest"
-        //      }
-        //    }
-        // }
+        stage('Deploy Image to ECS cluster') {
+            // when {
+            //     branch "develop"
+            // }
+            steps {
+                // make the update file executable
+                sh 'chmod +x ./update.sh'
+                // run the update script
+                sh './update.sh'
+           }
+        }
    }
 
