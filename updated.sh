@@ -14,12 +14,13 @@ echo $HOME
 
 #Store the repositoryUri as a variable
 REPOSITORY_URI=`aws ecr describe-repositories --repository-names direction-app --region ca-central-1 | jq '.repositories[] |.repositoryUri'`
+IMAGE_URI=`319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}`
 
 # Fetch task definition to be updated and store as contants
 TASK_DEFINITION=`aws ecs describe-task-definition --task-definition direction-task-definition --region ca-central-1`
 
 # update task definition with new image URL
-NEW_TASK_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$REPOSITORY_URI" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+NEW_TASK_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$IMAGE_URI" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
 
 # register new task definition
 aws ecs register-task-definition --region "ca-central-1" --cli-input-json "$NEW_TASK_DEFINTIION"
