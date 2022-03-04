@@ -32,7 +32,7 @@ pipeline {
             // }
             steps {
                 // make the update file executable
-                sh 'chmod +x ./update.sh'
+                sh 'chmod +x ./updated.sh'
                 // run the update script
                 sh './updated.sh'
            }
