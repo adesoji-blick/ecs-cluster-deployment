@@ -4,7 +4,7 @@ pipeline {
             AWS_ACCESS_KEY_ID     = credentials ('AWS_ACCESS_KEY_ID')
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
-            BUILD_NUMBER = '301'
+            BUILD_NUMBER = '401'
         } 
     stages {
         stage('Build & Tag Docker Image for Directions App') {
@@ -32,9 +32,9 @@ pipeline {
             // }
             steps {
                 // make the update file executable
-                sh 'chmod +x ./updated.sh'
+                sh 'chmod +x ./update.sh'
                 // run the update script
-                sh './updated.sh'
+                sh './update.sh'
            }
         }
    }

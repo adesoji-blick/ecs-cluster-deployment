@@ -32,11 +32,42 @@ REVISION=`aws ecs describe-task-definition --task-definition direction-task-defi
 # update service
 # aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
 
+SERVICE=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services[] |.failures'`
+
+# ROLLOUT_STATE=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services []|.deployments[]|.rolloutState'`
+#   if [ ${ROLLOUT_STATE} = "COMPLETED"]; then
+
 # stop ecs service - task
 #Create or update service
-if [ "$SERVICES" == "" ]; then
+if [ "$SERVICE" == "" ]; then
   echo "entered existing service"
   DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services[] |.desiredCount'`
+  RUNNING_TASK=`aws ecs list-tasks --cluster ${CLUSTER} --region ${REGION} | jq -r '.taskArns[0]'`
+  echo $RUNNING_TASK
+  echo "running task is"
+  if [ "$RUNNING_TASK" !=  "null" ];  then
+    aws ecs stop-task --cluster ${CLUSTER} --region ${REGION} --task $RUNNING_TASK
+  fi
+  if [ ${DESIRED_COUNT} = "0" ]; then
+    DESIRED_COUNT="1"
+  fi
+  aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
+else
+  echo "entered new service"
+  aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
+fi
+
+#Stop ecs service - task
+#Create or update service
+if [ "$SERVICE" == "" ]; then  
+  echo "entered existing service"
+  DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services[] |.desiredCount'`
+  RUNNING_TASK=`aws ecs list-tasks --cluster ${CLUSTER} --region ${REGION} | jq -r '.taskArns[0]'`
+  echo $RUNNING_TASK
+  echo "running task is"
+  if [ "$RUNNING_TASK" !=  "null" ];  then
+    aws ecs stop-task --cluster ${CLUSTER} --region ${REGION} --task $RUNNING_TASK
+  fi
   if [ ${DESIRED_COUNT} = "0" ]; then
     DESIRED_COUNT="1"
   fi
