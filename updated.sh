@@ -8,13 +8,14 @@ CLUSTER=direction-app-cluster
 FAMILY=direction-task-definition
 NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
+BUILD_NUMBER=203
 env
 aws configure list
 echo $HOME
 
 #Store the repositoryUri as a variable
-REPOSITORY_URI=`aws ecr describe-repositories --repository-names direction-app --region ca-central-1 | jq '.repositories[] |.repositoryUri'`
-IMAGE_URI=`319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}`
+# REPOSITORY_URI=`aws ecr describe-repositories --repository-names direction-app --region ca-central-1 | jq '.repositories[] |.repositoryUri'`
+IMAGE_URI=319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}
 
 # Fetch task definition to be updated and store as contants
 TASK_DEFINITION=`aws ecs describe-task-definition --task-definition direction-task-definition --region ca-central-1`
