@@ -16,7 +16,7 @@ echo $HOME
 #Store the repositoryUri as a variable
 REPOSITORY_URI=`aws ecr describe-repositories --repository-names direction-app --region ca-central-1 | jq -r '.repositories[] |.repositoryUri'`
 # IMAGE_URI=319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}
-IMAGE_URI=`$REPOSITORY_URI:0.0.${BUILD_NUMBER}`
+IMAGE_URI=$REPOSITORY_URI:0.0.${BUILD_NUMBER}
 
 # Fetch task definition to be updated and store as contants
 TASK_DEFINITION=`aws ecs describe-task-definition --task-definition ${FAMILY} --region ${REGION}`
