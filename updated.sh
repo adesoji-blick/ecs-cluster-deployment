@@ -32,6 +32,7 @@ REVISION=`aws ecs describe-task-definition --task-definition direction-task-defi
 # update service
 # aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
 
+# stop ecs service - task
 #Create or update service
 if [ "$SERVICES" == "" ]; then
   echo "entered existing service"
