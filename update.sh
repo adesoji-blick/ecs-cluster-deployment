@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-#Constants
+#constants
 PATH=$PATH:/usr/local/bin; export PATH
 REGION=ca-central-1
 REPOSITORY_NAME=direction-app
@@ -8,37 +8,34 @@ CLUSTER=direction-app-cluster
 FAMILY=direction-task-definition
 NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
-BUILD_NUMBER=401
+BUILD_NUMBER=2
 env
 aws configure list
 echo $HOME
 
-#Store the repositoryUri as a variable
-# REPOSITORY_URI=`aws ecr describe-repositories --repository-names direction-app --region ca-central-1 | jq '.repositories[] |.repositoryUri'`
-IMAGE_URI=319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:0.0.${BUILD_NUMBER}
+# store the repositoryUri as a variable
+REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NAME} --region ${REGION} | jq -r '.repositories[] |.repositoryUri'`
 
-# Fetch task definition to be updated and store as contants
-TASK_DEFINITION=`aws ecs describe-task-definition --task-definition direction-task-definition --region ca-central-1`
+# store the imageUri as a variable
+# IMAGE_URI=319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:2022.0.${BUILD_NUMBER}
+IMAGE_URI=$REPOSITORY_URI:2022.0.${BUILD_NUMBER}
 
-# update task definition with new image URL
-NEW_TASK_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$IMAGE_URI" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+# fetch task definition to be updated and store as constant
+TASK_DEFINITION=`aws ecs describe-task-definition --task-definition ${FAMILY} --region ${REGION}`
+
+# update task definition with new image URL and store as new_task_definition
+NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$IMAGE_URI" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
 
 # register new task definition
-aws ecs register-task-definition --region "ca-central-1" --cli-input-json "$NEW_TASK_DEFINTIION"
+aws ecs register-task-definition --region ${REGION} --cli-input-json "$NEW_TASK_DEFINITION"
 
-# set revision contannt
-REVISION=`aws ecs describe-task-definition --task-definition direction-task-definition --region ca-central-1 | jq .taskDefinition.revision`
+# set revision as a constant
+REVISION=`aws ecs describe-task-definition --task-definition ${FAMILY} --region ${REGION} | jq .taskDefinition.revision`
 
-# update service
-# aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
-
+# fetch service and store as constant
 SERVICE=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services[] |.status'`
 
-# ROLLOUT_STATE=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services []|.deployments[]|.rolloutState'`
-#   if [ ${ROLLOUT_STATE} = "COMPLETED"]; then
-
-# stop ecs service - task
-#Create or update service
+# stop ecs_service task # create or update service
 if [ "$SERVICE" != "null" ]; then  
   echo "entered existing service"
   DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq '.services[] |.desiredCount'`
