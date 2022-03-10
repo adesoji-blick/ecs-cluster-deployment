@@ -5,7 +5,7 @@ pipeline {
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
             ECR_REPO = '861694884470.dkr.ecr.ca-central-1.amazonaws.com/direction-app'
-            BUILD_NUMBER = '301'
+            BUILD_NUMBER = '401'
         } 
     stages {
         stage('Build & Tag Docker Image for Directions App') {
