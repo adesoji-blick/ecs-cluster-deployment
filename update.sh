@@ -8,7 +8,7 @@ CLUSTER=direction-app-cluster
 FAMILY=direction-task-definition
 NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
-BUILD_NUMBER=201
+BUILD_NUMBER=301
 env
 aws configure list
 echo $HOME
