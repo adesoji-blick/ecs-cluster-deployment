@@ -2,13 +2,13 @@
 set -x
 #constants
 PATH=$PATH:/usr/local/bin; export PATH
-REGION=ca-central-1
+REGION=eu-west-2
 REPOSITORY_NAME=direction-app
 CLUSTER=direction-app-cluster
 FAMILY=direction-task-definition
 NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
-BUILD_NUMBER=401
+BUILD_NUMBER=201
 env
 aws configure list
 echo $HOME
