@@ -4,7 +4,7 @@ pipeline {
             AWS_ACCESS_KEY_ID     = credentials ('AWS_ACCESS_KEY_ID')
             AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
             AWS_DEFAULT_REGION    = credentials ('AWS_DEFAULT_REGION')
-            ECR_REPO = '861694884470.dkr.ecr.ca-central-1.amazonaws.com/direction-app'
+            ECR_REPO = '861694884470.dkr.${AWS_DEFAULT_REGION}.amazonaws.com/direction-app'
             BUILD_NUMBER = '401'
         } 
     stages {
@@ -14,7 +14,7 @@ pipeline {
                 sh "sudo docker build -t direction-app:latest ."   
                 // Tag Docker Image for Directions App
                 sh "echo tagging Docker image for direction-app"
-                // sh "sudo docker tag direction-app:latest 861694884470.dkr.ecr.ca-central-1.amazonaws.com/direction-app:2022.0.${BUILD_NUMBER}"
+                // sh "sudo docker tag direction-app:latest 861694884470.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/direction-app:2022.0.${BUILD_NUMBER}"
                 sh "sudo docker tag direction-app:latest ${ECR_REPO}:2022.0.${BUILD_NUMBER}"     
             }
         }
@@ -28,16 +28,16 @@ pipeline {
                 sh "sudo docker push ${ECR_REPO}:2022.0.${BUILD_NUMBER}"
                 }   
            }
-        stage('Deploy Image to ECS cluster') {
-            // when {
-            //     branch "develop"
-            // }
-            steps {
-                // make the update file executable
-                sh 'chmod +x ./update.sh'
-                // run the update script
-                sh './update.sh'
-           }
-        }
+        // stage('Deploy Image to ECS cluster') {
+        //     // when {
+        //     //     branch "develop"
+        //     // }
+        //     steps {
+        //         // make the update file executable
+        //         sh 'chmod +x ./update.sh'
+        //         // run the update script
+        //         sh './update.sh'
+        //    }
+        // }
    }
 }
