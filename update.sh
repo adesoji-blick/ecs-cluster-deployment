@@ -8,7 +8,7 @@ CLUSTER=direction-app-cluster
 FAMILY=direction-task-definition
 NAME=direction-task-definition
 SERVICE_NAME=direction-app-service
-BUILD_NUMBER=201
+BUILD_NUMBER=11
 env
 aws configure list
 echo $HOME
@@ -18,7 +18,7 @@ REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NA
 
 # store the imageUri as a variable
 # IMAGE_URI=319670758662.dkr.ecr.ca-central-1.amazonaws.com/direction-app:2022.0.${BUILD_NUMBER}
-IMAGE_URI=$REPOSITORY_URI:2022.0.${BUILD_NUMBER}
+IMAGE_URI=$REPOSITORY_URI:2022.3.${BUILD_NUMBER}
 
 # fetch task definition to be updated and store as constant
 TASK_DEFINITION=`aws ecs describe-task-definition --task-definition ${FAMILY} --region ${REGION}`
